@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Produto from "./Produto";
+
+
+
 
 function App() {
+
+
+
+
+  const [dados,setdados] = React.useState(null)
+  const [carregando,setcarregando] = React.useState(null)
+
+  async function HandleClick(e){
+    setcarregando(true);
+    const dado = e.target.innerText.toLowerCase();
+    const dados = await fetch(`https://ranekapi.origamid.dev/json/api/produto/${dado}`)
+    const json = await dados.json();
+    setcarregando(false);
+    setdados(json)
+    console.log(json)
+    
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+      <button style={{marginRight: '10px'}} onClick={HandleClick}>Notebook</button>
+      <button style={{marginRight: '10px'}} onClick={HandleClick}>SmartPhone</button>
+      <button style={{marginRight: '10px'}} onClick={HandleClick}>Tablet</button>
+
+      {carregando && <p>Carregando ...</p>}
+      {!carregando && dados && <Produto {...dados}/>}
+
     </div>
+
   );
 }
 
